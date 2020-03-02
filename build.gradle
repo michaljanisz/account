@@ -1,0 +1,23 @@
+plugins {
+    id 'java'
+}
+
+group 'org.mja'
+version '1.0-SNAPSHOT'
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'com.google.dagger:dagger:2.26'
+    compile 'org.sharegov:mjson:1.4.0'
+
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.26'
+
+    compileOnly 'org.projectlombok:lombok:1.18.12'
+    annotationProcessor 'org.projectlombok:lombok:1.18.12'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

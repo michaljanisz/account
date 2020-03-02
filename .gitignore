@@ -1,0 +1,23 @@
+/.gradle/
+/.metadata/
+/build/
+/out/
+/.settings/
+/bin
+/.DS_Store
+.DS_Store
+/.classpath
+/.project
+/.recommenders
+/.externalToolBuilders/
+/.idea
+
+*.launch
+*.tmp
+*.iml
+*.bak
+*.swp
+*~.nib
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!gradle-wrapper.jar

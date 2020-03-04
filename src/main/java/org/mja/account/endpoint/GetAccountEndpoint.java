@@ -2,24 +2,25 @@ package org.mja.account.endpoint;
 
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import org.mja.account.endpoint.exception.NotFoundException;
 import org.mja.account.http.HttpMethod;
 import org.mja.account.model.Account;
 import org.mja.account.repository.AccountRepository;
 
-public class CreateAccountEndpoint extends AbstractEndpoint {
+public class GetAccountEndpoint extends AbstractEndpoint {
 
   private static final String ACCOUNTS = "/accounts";
   private final AccountRepository accountRepository;
   private final Logger logger = Logger.getLogger(getClass().getName());
 
   @Inject
-  public CreateAccountEndpoint(AccountRepository accountRepository) {
+  public GetAccountEndpoint(AccountRepository accountRepository) {
     this.accountRepository = accountRepository;
   }
 
   @Override
   public HttpMethod getMethod() {
-    return HttpMethod.POST;
+    return HttpMethod.GET;
   }
 
   @Override
@@ -29,8 +30,9 @@ public class CreateAccountEndpoint extends AbstractEndpoint {
 
   @Override
   protected EndpointResponse process(EndpointRequest request) {
-    Account account = Account.fromJson(request.getJson());
-    logger.info("creating an account " + account);
-    return EndpointResponse.fromJson(Account.toJson(accountRepository.create(account)));
+    String id = request.getLastPathParamValue();
+    logger.info("get an account for id " + id);
+    return EndpointResponse.fromJson(Account.toJson(accountRepository.findById(id)
+        .orElseThrow(() -> new NotFoundException("account with id " + id + " not found"))));
   }
 }

@@ -31,13 +31,18 @@ public abstract class AbstractEndpoint implements Endpoint {
   }
 
   private EndpointRequest extractRequest(HttpExchange httpExchange) throws IOException {
+    Json json;
     if (getMethod().isSupportsJsonInRequest()) {
       try (var requestInputStream = httpExchange.getRequestBody()) {
-        String requestAsString = new String(requestInputStream.readAllBytes());
-        return new EndpointRequest().setJson(Json.read(requestAsString));
+        var requestAsString = new String(requestInputStream.readAllBytes());
+        json = Json.read(requestAsString);
       }
+    } else {
+      json = null;
     }
-    return EndpointRequest.EMPTY;
+
+    return EndpointRequest.builder().json(json)
+        .uri(httpExchange.getRequestURI()).build();
   }
 
   protected abstract EndpointResponse process(EndpointRequest request);

@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import mjson.Json;
 import org.mja.account.endpoint.exception.UnprocessableEntityException;
 import org.mja.account.util.JsonUtil;
@@ -11,6 +12,7 @@ import org.mja.account.util.JsonUtil;
 
 @Getter
 @Setter
+@ToString(callSuper = true)
 public class Account extends BaseEntity {
 
   private final String number;

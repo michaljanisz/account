@@ -1,13 +1,12 @@
 package org.mja.account.endpoint;
 
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import org.mja.account.endpoint.exception.NotFoundException;
 import org.mja.account.endpoint.exception.UnprocessableEntityException;
 import org.mja.account.http.HttpMethod;
 import org.mja.account.model.Account;
 import org.mja.account.model.Transfer;
-import org.mja.account.module.DaggerRepoBuilder;
-import org.mja.account.module.RepoBuilder;
 import org.mja.account.repository.AccountRepository;
 import org.mja.account.repository.TransferRepository;
 
@@ -19,10 +18,11 @@ public class CreateTransferEndpoint extends AbstractEndpoint {
   private final AccountRepository accountRepository;
   private final TransferRepository transferRepository;
 
-  public CreateTransferEndpoint() {
-    final RepoBuilder repoBuilder = DaggerRepoBuilder.builder().build();
-    accountRepository = repoBuilder.accountRepository();
-    transferRepository = repoBuilder.transferRepository();
+  @Inject
+  public CreateTransferEndpoint(AccountRepository accountRepository,
+      TransferRepository transferRepository) {
+    this.accountRepository = accountRepository;
+    this.transferRepository = transferRepository;
   }
 
   @Override
@@ -58,7 +58,7 @@ public class CreateTransferEndpoint extends AbstractEndpoint {
 
   @Override
   public HttpMethod getMethod() {
-    return null;
+    return HttpMethod.POST;
   }
 
   @Override

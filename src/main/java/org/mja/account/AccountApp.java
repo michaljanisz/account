@@ -9,7 +9,7 @@ public class AccountApp {
 
   public static void main(String[] args) throws Exception {
     ServerBuilder serverBuilder = DaggerServerBuilder.builder().build();
-    serverBuilder.server().start(8080);
+    serverBuilder.server().run();
   }
 
 }

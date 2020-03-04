@@ -11,7 +11,7 @@ import org.mja.account.http.AccountHttpServer;
 import org.mja.account.http.AccountHttpServerLoggingFilter;
 import org.mja.account.http.EndpointHandler;
 
-@Module(includes = {EndpointsModule.class, RepositoryModule.class})
+@Module(includes = {EndpointsModule.class})
 public class AccountHttpServerModule {
 
   @Provides

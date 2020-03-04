@@ -11,24 +11,37 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import lombok.SneakyThrows;
 
 @Singleton
-public class AccountHttpServer {
+public class AccountHttpServer implements Runnable {
 
   private Collection<Filter> filters;
   private HttpHandler httpHandler;
+  private int port = 8080;
+  private HttpServer server;
 
   @Inject
+  @SneakyThrows
   public AccountHttpServer(Collection<Filter> filters,
       HttpHandler httpHandler) {
     this.filters = filters;
     this.httpHandler = httpHandler;
+    this.server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
   }
 
-  public void start(int port) throws IOException {
+  @SneakyThrows
+  public void startInANewThread(int port) throws IOException {
+    new Thread(this).start();
+    var logger = Logger.getLogger(AccountHttpServer.class.getName());
+    logger.info("  on port " + port);
+  }
+
+  @SneakyThrows
+  @Override
+  public void run() {
     var logger = Logger.getLogger(AccountHttpServer.class.getName());
     var threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-    var server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
     server.createContext("/", httpHandler).getFilters()
         .addAll(filters);
     server.setExecutor(threadPoolExecutor);
@@ -37,9 +50,12 @@ public class AccountHttpServer {
       server.stop(1);
       logger.info("Server stopped");
     }));
+    logger.info("starting server...");
     server.start();
-
     logger.info(" Server started on port " + port);
   }
 
+  public void stop() {
+    server.stop(0);
+  }
 }

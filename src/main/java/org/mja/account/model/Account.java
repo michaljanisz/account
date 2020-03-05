@@ -86,4 +86,8 @@ public class Account extends BaseEntity {
       throw new BadRequestException("currency is mandatory");
     }
   }
+
+  public void creditAmount(BigDecimal amount) {
+    balance = balance.add(amount);
+  }
 }

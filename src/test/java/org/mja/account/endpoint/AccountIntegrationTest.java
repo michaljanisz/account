@@ -6,9 +6,6 @@ import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.http.HttpResponse;
-import mjson.Json;
-import org.junit.After;
 import org.junit.Test;
 import org.mja.account.BaseIntegrationTest;
 import org.mja.account.model.Account;
@@ -25,17 +22,15 @@ public class AccountIntegrationTest extends BaseIntegrationTest {
 
     var created = createAccount(account);
 
-
-    assertThat(created.getId(), notNullValue());
+    final String id = created.getId();
+    assertThat(id, notNullValue());
     assertThat(created.getNumber(), is("10"));
     assertThat(created.getCurrency(), is("PLN"));
     assertThat(created.getBalance(), is(BigDecimal.valueOf(1000)));
 
-    var getResponse = get("accounts/%s",created.getId());
-    var getJson = Json.read(getResponse.body());
-    var fetchedAccount = Account.fromJson(getJson);
+    Account fetchedAccount = getAccount(id);
 
-    assertThat(fetchedAccount.getId(), is(created.getId()));
+    assertThat(fetchedAccount.getId(), is(id));
     assertThat(fetchedAccount.getNumber(), is("10"));
     assertThat(fetchedAccount.getCurrency(), is("PLN"));
     assertThat(fetchedAccount.getBalance(), is(BigDecimal.valueOf(1000)));

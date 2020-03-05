@@ -13,7 +13,7 @@ public class TransferTest {
   @Test
   public void shouldParseJson() {
     // given
-    var transferAsTest ="{\"amount\":999.99,\"to_account_id\":\"c37dcd36-4791-4319-b9c1-69d899ce7051\",\"id\":\"59cc083a-5267-4618-ac27-b241759f3555\",\"from_account_id\":\"e70997a2-9733-4f87-8902-b3e3b2307d79\"}";
+    var transferAsTest = "{\"amount\":999.99,\"to_account_id\":\"c37dcd36-4791-4319-b9c1-69d899ce7051\",\"id\":\"59cc083a-5267-4618-ac27-b241759f3555\",\"from_account_id\":\"e70997a2-9733-4f87-8902-b3e3b2307d79\"}";
 
     // when
     final Transfer transfer = Transfer.fromJson(Json.read(transferAsTest));

@@ -27,10 +27,10 @@ public class AccountTest {
     // given
     var account = Account.builder()
         .id("7b0b2222-6a87-4068-b8a2-111038a6bc4d")
-      .number("10100")
-      .currency("EUR")
-      .balance(BigDecimal.valueOf(10.12))
-      .build();
+        .number("10100")
+        .currency("EUR")
+        .balance(BigDecimal.valueOf(10.12))
+        .build();
 
     Json asJson = Account.toJson(account);
     Account accountFromJson = Account.fromJson(asJson);

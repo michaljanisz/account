@@ -37,7 +37,7 @@ public class CreateTransferEndpoint extends AbstractEndpoint {
 
     validateCurrencies(toAccount, fromAccount);
     fromAccount.debitAmountIfPossible(transfer.getAmount());
-
+    toAccount.creditAmount(transfer.getAmount());
     logger.info("creating a transfer " + transfer);
     return EndpointResponse.fromJson(Transfer.toJson(transferRepository.create(transfer)));
 //    }

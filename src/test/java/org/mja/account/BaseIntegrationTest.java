@@ -1,7 +1,6 @@
 package org.mja.account;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
@@ -12,10 +11,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.UUID;
 import mjson.Json;
-import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.Test;
 import org.mja.account.http.AccountHttpServer;
 import org.mja.account.model.Account;
 import org.mja.account.module.DaggerServerBuilder;
@@ -55,11 +51,11 @@ public abstract class BaseIntegrationTest {
     return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
   }
 
-  protected HttpResponse<String> get(String path, String ... params)
+  protected HttpResponse<String> get(String path, String... params)
       throws IOException, InterruptedException {
     HttpRequest request = HttpRequest.newBuilder()
         .GET()
-        .uri(URI.create(BASE_URL + String.format(path, params)))
+        .uri(URI.create(BASE_URL + String.format(path, (Object[]) params)))
         .header("Content-Type", "application/json")
         .build();
 
@@ -86,6 +82,7 @@ public abstract class BaseIntegrationTest {
 
     return response;
   }
+
   protected Account createAccount(Account input) throws IOException, InterruptedException {
     HttpResponse<String> response = createAccountReturnResponse(input);
     assertThat(response.statusCode(), is(200));
@@ -95,8 +92,14 @@ public abstract class BaseIntegrationTest {
     return account;
   }
 
- // @AfterClass
+  protected Account getAccount(String id) throws IOException, InterruptedException {
+    var getResponse = get("accounts/%s", id);
+    assertThat(getResponse.statusCode(), is(200));
+    var getJson = Json.read(getResponse.body());
+    return Account.fromJson(getJson);
+  }
+  // @AfterClass
   //public void tearDown() throws Exception {
-   // server.stop();
- // }
+  // server.stop();
+  // }
 }

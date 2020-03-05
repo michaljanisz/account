@@ -59,4 +59,9 @@ public class Transfer extends BaseEntity {
       throw new UnprocessableEntityException("amount must be greater then 0");
     }
   }
+
+  @Override
+  public String toString() {
+    return toJson(this).toString();
+  }
 }

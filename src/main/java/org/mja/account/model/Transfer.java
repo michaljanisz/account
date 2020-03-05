@@ -44,6 +44,7 @@ public class Transfer extends BaseEntity {
         .set("amount", transfer.getAmount());
   }
 
+  @Override
   public void validateBeforeCreate() {
     if (fromAccountId == null) {
       throw new UnprocessableEntityException("from account cannot be null");

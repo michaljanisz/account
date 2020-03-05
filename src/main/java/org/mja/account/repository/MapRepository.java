@@ -12,6 +12,7 @@ public abstract class MapRepository<T extends BaseEntity> implements Repository<
 
   @Override
   public T create(T obj) {
+    obj.validateBeforeCreate();
     obj.setId(UUID.randomUUID().toString());
     storageMap.put(obj.getId(), obj);
     return obj;

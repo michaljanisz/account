@@ -29,6 +29,10 @@ public class JsonUtil {
     if (at == null) {
       return "";
     }
-    return at.asString();
+    try {
+      return at.asString();
+    } catch (UnsupportedOperationException e) {
+      return null;
+    }
   }
 }

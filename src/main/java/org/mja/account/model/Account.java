@@ -4,15 +4,14 @@ import java.math.BigDecimal;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import mjson.Json;
+import org.mja.account.endpoint.exception.BadRequestException;
 import org.mja.account.endpoint.exception.UnprocessableEntityException;
 import org.mja.account.util.JsonUtil;
 
 
 @Getter
 @Setter
-@ToString(callSuper = true)
 public class Account extends BaseEntity {
 
   private final String number;
@@ -57,7 +56,6 @@ public class Account extends BaseEntity {
     setBalance(balanceAfterOperation);
   }
 
-
   private void validateDebit(BigDecimal amount) {
     if (amount == null) {
       throw new UnprocessableEntityException("cannot debit with empty amount");
@@ -71,6 +69,21 @@ public class Account extends BaseEntity {
     if (amount.compareTo(BigDecimal.ZERO) <= 0) {
       throw new UnprocessableEntityException("amount must be greater then 0");
     }
+  }
 
+  @Override
+  public String toString() {
+    return Account.toJson(this).toString();
+  }
+
+  @Override
+  public void validateBeforeCreate() throws BadRequestException {
+
+    if (number == null) {
+      throw new BadRequestException("Number is mandatory");
+    }
+    if (currency == null) {
+      throw new BadRequestException("currency is mandatory");
+    }
   }
 }

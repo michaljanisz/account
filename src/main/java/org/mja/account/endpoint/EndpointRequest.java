@@ -6,7 +6,7 @@ import java.util.Optional;
 import lombok.Builder;
 import lombok.Data;
 import mjson.Json;
-import org.mja.account.endpoint.exception.BadRequest;
+import org.mja.account.endpoint.exception.BadRequestException;
 
 @Data
 public class EndpointRequest {
@@ -39,7 +39,7 @@ public class EndpointRequest {
 
   public String getQueryParamValueOrThrow(String name) {
     return Optional.ofNullable(params.get(name))
-        .orElseThrow(() -> new BadRequest("missing parameter " + name));
+        .orElseThrow(() -> new BadRequestException("missing parameter " + name));
   }
 
   public String getLastPathParamValue() {

@@ -5,16 +5,19 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.UUID;
 import mjson.Json;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.mja.account.http.AccountHttpServer;
+import org.mja.account.model.Account;
 import org.mja.account.module.DaggerServerBuilder;
 import org.mja.account.module.ServerBuilder;
 
@@ -61,6 +64,35 @@ public abstract class BaseIntegrationTest {
         .build();
 
     return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+  }
+
+  protected Account createAccount(int balance) throws IOException, InterruptedException {
+    return createAccount(balance, "EUR");
+  }
+
+  protected Account createAccount(int balance, String currency)
+      throws IOException, InterruptedException {
+    return createAccount(
+        Account.builder()
+            .number(UUID.randomUUID().toString())
+            .balance(new BigDecimal((balance)))
+            .currency(currency).build());
+  }
+
+  protected HttpResponse<String> createAccountReturnResponse(Account input)
+      throws IOException, InterruptedException {
+    Json accountAsJson = Account.toJson(input);
+    var response = post("accounts", accountAsJson.toString());
+
+    return response;
+  }
+  protected Account createAccount(Account input) throws IOException, InterruptedException {
+    HttpResponse<String> response = createAccountReturnResponse(input);
+    assertThat(response.statusCode(), is(200));
+
+    var responseJson = Json.read(response.body());
+    var account = Account.fromJson(responseJson);
+    return account;
   }
 
  // @AfterClass

@@ -55,7 +55,4 @@ public class AccountHttpServer implements Runnable {
     logger.info(" Server started on port " + port);
   }
 
-  public void stop() {
-    server.stop(0);
-  }
 }

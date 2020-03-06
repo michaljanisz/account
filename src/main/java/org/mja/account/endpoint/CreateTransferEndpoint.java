@@ -5,8 +5,8 @@ import javax.inject.Inject;
 import org.mja.account.endpoint.exception.NotFoundException;
 import org.mja.account.endpoint.exception.UnprocessableEntityException;
 import org.mja.account.http.HttpMethod;
-import org.mja.account.model.Account;
-import org.mja.account.model.Transfer;
+import org.mja.account.model.AccountEntity;
+import org.mja.account.model.TransferEntity;
 import org.mja.account.repository.AccountRepository;
 import org.mja.account.repository.TransferRepository;
 
@@ -27,30 +27,30 @@ public class CreateTransferEndpoint extends AbstractEndpoint {
 
   @Override
   protected EndpointResponse process(EndpointRequest request) {
-    Transfer transfer = Transfer.fromJson(request.getJson());
+    TransferEntity transfer = TransferEntity.fromJson(request.getJson());
     transfer.validateBeforeCreate();
-    Account toAccount = checkAccountExists(transfer.getToAccountId());
+    AccountEntity toAccount = checkAccountExists(transfer.getToAccountId());
 
     // this part should be synchronized
     synchronized (this) {
-      Account fromAccount = checkAccountExists(transfer.getFromAccountId());
+      AccountEntity fromAccount = checkAccountExists(transfer.getFromAccountId());
 
       validateCurrencies(toAccount, fromAccount);
       fromAccount.debitAmountIfPossible(transfer.getAmount());
       toAccount.creditAmount(transfer.getAmount());
       logger.info("creating a transfer " + transfer);
-      return EndpointResponse.fromJson(Transfer.toJson(transferRepository.create(transfer)));
+      return EndpointResponse.fromJson(TransferEntity.toJson(transferRepository.create(transfer)));
     }
   }
 
-  private void validateCurrencies(Account toAccount, Account fromAccount) {
+  private void validateCurrencies(AccountEntity toAccount, AccountEntity fromAccount) {
     if (fromAccount.getCurrency() != null && !fromAccount.getCurrency()
         .equals(toAccount.getCurrency())) {
       throw new UnprocessableEntityException("cannot do transfer between two different currencies");
     }
   }
 
-  private Account checkAccountExists(String accountId) {
+  private AccountEntity checkAccountExists(String accountId) {
     return accountRepository.findById(accountId)
         .orElseThrow(
             () -> new NotFoundException("account with id " + accountId + " does not exist"));

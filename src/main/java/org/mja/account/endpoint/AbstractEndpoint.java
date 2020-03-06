@@ -41,8 +41,10 @@ public abstract class AbstractEndpoint implements Endpoint {
       json = null;
     }
 
-    return EndpointRequest.builder().json(json)
-        .uri(httpExchange.getRequestURI()).build();
+    return EndpointRequest.builder()
+        .json(json)
+        .uri(httpExchange.getRequestURI())
+        .build();
   }
 
   protected abstract EndpointResponse process(EndpointRequest request);

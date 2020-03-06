@@ -8,7 +8,7 @@ import java.util.UUID;
 import mjson.Json;
 import org.junit.Test;
 
-public class TransferTest {
+public class TransferEntityTest {
 
   @Test
   public void shouldParseJson() {
@@ -16,7 +16,7 @@ public class TransferTest {
     var transferAsTest = "{\"amount\":999.99,\"to_account_id\":\"c37dcd36-4791-4319-b9c1-69d899ce7051\",\"id\":\"59cc083a-5267-4618-ac27-b241759f3555\",\"from_account_id\":\"e70997a2-9733-4f87-8902-b3e3b2307d79\"}";
 
     // when
-    final Transfer transfer = Transfer.fromJson(Json.read(transferAsTest));
+    final TransferEntity transfer = TransferEntity.fromJson(Json.read(transferAsTest));
 
     // then
     assertThat(transfer.getId(), is("59cc083a-5267-4618-ac27-b241759f3555"));
@@ -32,15 +32,15 @@ public class TransferTest {
     var fromId = UUID.randomUUID().toString();
     var toId = UUID.randomUUID().toString();
     var amount = BigDecimal.valueOf(999.99);
-    var transfer = Transfer.builder()
+    var transfer = TransferEntity.builder()
         .id(id)
         .fromAccountId(fromId)
         .toAccountId(toId)
         .amount(amount)
         .build();
     //when
-    Json asJson = Transfer.toJson(transfer);
-    Transfer transferFromJson = Transfer.fromJson(asJson);
+    Json asJson = TransferEntity.toJson(transfer);
+    TransferEntity transferFromJson = TransferEntity.fromJson(asJson);
 
     //then
     assertThat(transferFromJson.getId(), is(id));

@@ -12,22 +12,22 @@ import org.mja.account.util.JsonUtil;
 
 @Getter
 @Setter
-public class Transfer extends BaseEntity {
+public class TransferEntity extends BaseEntity {
 
   private final String fromAccountId;
   private final String toAccountId;
   private final BigDecimal amount;
 
   @Builder
-  public Transfer(String id, String fromAccountId, String toAccountId, BigDecimal amount) {
+  public TransferEntity(String id, String fromAccountId, String toAccountId, BigDecimal amount) {
     super(id);
     this.fromAccountId = fromAccountId;
     this.toAccountId = toAccountId;
     this.amount = amount;
   }
 
-  public static Transfer fromJson(Json json) {
-    return Transfer.builder()
+  public static TransferEntity fromJson(Json json) {
+    return TransferEntity.builder()
         .id(asString(json, "id"))
         .fromAccountId(asString(json, "from_account_id"))
         .toAccountId(asString(json, "to_account_id"))
@@ -36,7 +36,7 @@ public class Transfer extends BaseEntity {
 
   }
 
-  public static Json toJson(Transfer transfer) {
+  public static Json toJson(TransferEntity transfer) {
     return Json.object()
         .set("id", transfer.getId())
         .set("from_account_id", transfer.getFromAccountId())

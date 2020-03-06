@@ -11,7 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mja.account.BaseIntegrationTest;
-import org.mja.account.model.Account;
+import org.mja.account.model.AccountEntity;
 
 @RunWith(ConcurrentTestRunner.class)
 public class TransferRaceConditionTest extends BaseIntegrationTest {
@@ -21,8 +21,8 @@ public class TransferRaceConditionTest extends BaseIntegrationTest {
   private static final int NO_OF_TRANSFERS_PER_THREAD = 100;
   private static final int TRANSFER_AMOUNT = 10;
 
-  private Account fromAccount;
-  private Account toAccount;
+  private AccountEntity fromAccount;
+  private AccountEntity toAccount;
 
   @Before
   public void initializeAccounts() {

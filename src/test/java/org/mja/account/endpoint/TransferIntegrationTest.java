@@ -7,7 +7,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.math.BigDecimal;
 import org.junit.Test;
 import org.mja.account.BaseIntegrationTest;
-import org.mja.account.model.Transfer;
+import org.mja.account.model.TransferEntity;
 
 public class TransferIntegrationTest extends BaseIntegrationTest {
 
@@ -34,7 +34,7 @@ public class TransferIntegrationTest extends BaseIntegrationTest {
   public void shouldFailToCreateTransfer_whenAmountBelowZero() {
     var fromAccount = createAccount(1000);
     var toAccount = createAccount(1000);
-    var transfer = Transfer.builder()
+    var transfer = TransferEntity.builder()
         .fromAccountId(fromAccount.getId())
         .toAccountId(toAccount.getId())
         .amount(BigDecimal.valueOf(-100))
@@ -47,7 +47,7 @@ public class TransferIntegrationTest extends BaseIntegrationTest {
   public void shouldFailToCreateTransfer_whenAmountIsEmpty() {
     var fromAccount = createAccount(1000);
     var toAccount = createAccount(1000);
-    var transfer = Transfer.builder()
+    var transfer = TransferEntity.builder()
         .fromAccountId(fromAccount.getId())
         .toAccountId(toAccount.getId())
         .amount(null)
@@ -59,7 +59,7 @@ public class TransferIntegrationTest extends BaseIntegrationTest {
   @Test
   public void shouldFailToCreateTransfer_whenFromAccountEmpty() {
     var toAccount = createAccount(1000);
-    var transfer = Transfer.builder()
+    var transfer = TransferEntity.builder()
         .fromAccountId(null)
         .toAccountId(toAccount.getId())
         .amount(BigDecimal.valueOf(100))
@@ -71,7 +71,7 @@ public class TransferIntegrationTest extends BaseIntegrationTest {
   @Test
   public void shouldFailToCreateTransfer_whenToAccountEmpty() {
     var fromAccount = createAccount(1000);
-    var transfer = Transfer.builder()
+    var transfer = TransferEntity.builder()
         .fromAccountId(fromAccount.getId())
         .toAccountId(null)
         .amount(BigDecimal.valueOf(100))
@@ -84,7 +84,7 @@ public class TransferIntegrationTest extends BaseIntegrationTest {
   public void shouldFailToCreateTransfer_whenToAccountInDifferentCurrencies() {
     var fromAccount = createAccount(1000, "EUR");
     var toAccount = createAccount(1000, "USD");
-    var transfer = Transfer.builder()
+    var transfer = TransferEntity.builder()
         .fromAccountId(fromAccount.getId())
         .toAccountId(toAccount.getId())
         .amount(BigDecimal.valueOf(100))
@@ -97,7 +97,7 @@ public class TransferIntegrationTest extends BaseIntegrationTest {
   public void shouldFailToCreateTransfer_whenBalanceBelow0() {
     var fromAccount = createAccount(1000);
     var toAccount = createAccount(1000);
-    var transfer = Transfer.builder()
+    var transfer = TransferEntity.builder()
         .fromAccountId(fromAccount.getId())
         .toAccountId(toAccount.getId())
         .amount(BigDecimal.valueOf(2000))
@@ -107,7 +107,32 @@ public class TransferIntegrationTest extends BaseIntegrationTest {
         "Cannot go below zero for account " + fromAccount.getId());
   }
 
-  public void assertTransferResponse(Transfer transfer,
+  @Test
+  public void shouldFailToCreateTransfer_whenFromAccountNotFound() {
+    var toAccount = createAccount(1000);
+    var transfer = TransferEntity.builder()
+        .fromAccountId("not_existing_id")
+        .toAccountId(toAccount.getId())
+        .amount(BigDecimal.valueOf(2000))
+        .build();
+
+    assertTransferResponse(transfer, 404,
+        "account with id not_existing_id does not exist");
+  }
+
+  @Test
+  public void shouldFailToCreateTransfer_whenToAccountNotFound() {
+    var fromAccount = createAccount(1000);
+    var transfer = TransferEntity.builder()
+        .fromAccountId(fromAccount.getId())
+        .toAccountId("not_existing_id")
+        .amount(BigDecimal.valueOf(2000))
+        .build();
+
+    assertTransferResponse(transfer, 404,
+        "account with id not_existing_id does not exist");
+  }
+  public void assertTransferResponse(TransferEntity transfer,
       int code,
       String message) {
     var response = post("transfers", transfer.toString());

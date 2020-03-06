@@ -12,14 +12,14 @@ import org.mja.account.util.JsonUtil;
 
 @Getter
 @Setter
-public class Account extends BaseEntity {
+public class AccountEntity extends BaseEntity {
 
   private final String number;
   private final String currency;
   private BigDecimal balance;
 
   @Builder
-  public Account(String id, String number, String currency, BigDecimal balance) {
+  public AccountEntity(String id, String number, String currency, BigDecimal balance) {
     super(id);
     this.number = number;
     this.currency = currency;
@@ -30,8 +30,8 @@ public class Account extends BaseEntity {
     }
   }
 
-  public static Account fromJson(Json json) {
-    return Account.builder()
+  public static AccountEntity fromJson(Json json) {
+    return AccountEntity.builder()
         .id(JsonUtil.asString(json, "id"))
         .number(JsonUtil.asString(json, "number"))
         .currency(JsonUtil.asString(json, "currency"))
@@ -39,7 +39,7 @@ public class Account extends BaseEntity {
         .build();
   }
 
-  public static Json toJson(Account account) {
+  public static Json toJson(AccountEntity account) {
     return Json.object()
         .set("id", account.getId())
         .set("number", account.getNumber())
@@ -73,12 +73,11 @@ public class Account extends BaseEntity {
 
   @Override
   public String toString() {
-    return Account.toJson(this).toString();
+    return AccountEntity.toJson(this).toString();
   }
 
   @Override
   public void validateBeforeCreate() throws BadRequestException {
-
     if (number == null) {
       throw new BadRequestException("Number is mandatory");
     }

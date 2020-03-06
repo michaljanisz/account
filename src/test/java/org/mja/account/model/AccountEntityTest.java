@@ -7,14 +7,14 @@ import java.math.BigDecimal;
 import mjson.Json;
 import org.junit.Test;
 
-public class AccountTest {
+public class AccountEntityTest {
 
   @Test
   public void shouldParseJson() {
     // given
     var accountAsString = "{\"number\":\"10100\",\"balance\":10.12,\"currency\":\"EUR\",\"id\":\"7b0b2222-6a87-4068-b8a2-111038a6bc4d\"}";
 
-    Account account = Account.fromJson(Json.read(accountAsString));
+    AccountEntity account = AccountEntity.fromJson(Json.read(accountAsString));
 
     assertThat(account.getId(), is("7b0b2222-6a87-4068-b8a2-111038a6bc4d"));
     assertThat(account.getNumber(), is("10100"));
@@ -25,15 +25,15 @@ public class AccountTest {
   @Test
   public void shouldSerializeToJson() {
     // given
-    var account = Account.builder()
+    var account = AccountEntity.builder()
         .id("7b0b2222-6a87-4068-b8a2-111038a6bc4d")
         .number("10100")
         .currency("EUR")
         .balance(BigDecimal.valueOf(10.12))
         .build();
 
-    Json asJson = Account.toJson(account);
-    Account accountFromJson = Account.fromJson(asJson);
+    Json asJson = AccountEntity.toJson(account);
+    AccountEntity accountFromJson = AccountEntity.fromJson(asJson);
 
     assertThat(accountFromJson.getId(), is("7b0b2222-6a87-4068-b8a2-111038a6bc4d"));
     assertThat(accountFromJson.getNumber(), is("10100"));

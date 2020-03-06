@@ -1,7 +1,7 @@
 package org.mja.account.repository;
 
-import org.mja.account.model.Transfer;
+import org.mja.account.model.TransferEntity;
 
-public class TransferRepository extends MapRepository<Transfer> {
+public class TransferRepository extends MapRepository<TransferEntity> {
 
 }

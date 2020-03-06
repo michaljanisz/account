@@ -7,13 +7,13 @@ import static org.junit.Assert.assertThat;
 import java.math.BigDecimal;
 import org.junit.Test;
 import org.mja.account.BaseIntegrationTest;
-import org.mja.account.model.Account;
+import org.mja.account.model.AccountEntity;
 
 public class AccountIntegrationTest extends BaseIntegrationTest {
 
   @Test
   public void createAndGetAnAccount() {
-    var account = Account.builder()
+    var account = AccountEntity.builder()
         .number("10")
         .currency("PLN")
         .balance(BigDecimal.valueOf(1000))
@@ -27,7 +27,7 @@ public class AccountIntegrationTest extends BaseIntegrationTest {
     assertThat(created.getCurrency(), is("PLN"));
     assertThat(created.getBalance(), is(BigDecimal.valueOf(1000)));
 
-    Account fetchedAccount = getAccount(id);
+    AccountEntity fetchedAccount = getAccount(id);
 
     assertThat(fetchedAccount.getId(), is(id));
     assertThat(fetchedAccount.getNumber(), is("10"));
@@ -37,7 +37,7 @@ public class AccountIntegrationTest extends BaseIntegrationTest {
 
   @Test
   public void createAnAccount() {
-    var account = Account.builder()
+    var account = AccountEntity.builder()
         .number("20")
         .currency("EUR")
         .balance(BigDecimal.valueOf(2000))
@@ -53,7 +53,7 @@ public class AccountIntegrationTest extends BaseIntegrationTest {
 
   @Test
   public void shouldNotCreateAnAccount_whenNoCurrency() {
-    var account = Account.builder()
+    var account = AccountEntity.builder()
         .number("10")
         .balance(BigDecimal.valueOf(1000))
         .build();
@@ -64,7 +64,7 @@ public class AccountIntegrationTest extends BaseIntegrationTest {
 
   @Test
   public void shouldNotCreateAnAccount_whenNoNumber() {
-    var account = Account.builder()
+    var account = AccountEntity.builder()
         .currency("PLN")
         .balance(BigDecimal.valueOf(1000))
         .build();

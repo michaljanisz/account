@@ -14,8 +14,8 @@ import mjson.Json;
 import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.mja.account.http.AccountHttpServer;
-import org.mja.account.model.Account;
-import org.mja.account.model.Transfer;
+import org.mja.account.model.AccountEntity;
+import org.mja.account.model.TransferEntity;
 import org.mja.account.module.DaggerServerBuilder;
 import org.mja.account.module.ServerBuilder;
 
@@ -70,43 +70,43 @@ public abstract class BaseIntegrationTest {
     }
   }
 
-  protected Account createAccount(int balance) {
+  protected AccountEntity createAccount(int balance) {
     return createAccount(balance, "EUR");
   }
 
-  protected Account createAccount(int balance, String currency) {
+  protected AccountEntity createAccount(int balance, String currency) {
     return createAccount(
-        Account.builder()
+        AccountEntity.builder()
             .number(UUID.randomUUID().toString())
             .balance(new BigDecimal((balance)))
             .currency(currency).build());
   }
 
-  protected HttpResponse<String> createAccountReturnResponse(Account input) {
-    Json accountAsJson = Account.toJson(input);
+  protected HttpResponse<String> createAccountReturnResponse(AccountEntity input) {
+    Json accountAsJson = AccountEntity.toJson(input);
     var response = post("accounts", accountAsJson.toString());
 
     return response;
   }
 
-  protected Account createAccount(Account input) {
+  protected AccountEntity createAccount(AccountEntity input) {
     HttpResponse<String> response = createAccountReturnResponse(input);
     assertThat(response.statusCode(), is(200));
 
     var responseJson = Json.read(response.body());
-    var account = Account.fromJson(responseJson);
+    var account = AccountEntity.fromJson(responseJson);
     return account;
   }
 
-  protected Account getAccount(String id) {
+  protected AccountEntity getAccount(String id) {
     var getResponse = get("accounts/%s", id);
     assertThat(getResponse.statusCode(), is(200));
     var getJson = Json.read(getResponse.body());
-    return Account.fromJson(getJson);
+    return AccountEntity.fromJson(getJson);
   }
 
-  protected Transfer createTransfer(Account fromAccount, Account toAccount, int amount) {
-    var transfer = Transfer.builder()
+  protected TransferEntity createTransfer(AccountEntity fromAccount, AccountEntity toAccount, int amount) {
+    var transfer = TransferEntity.builder()
         .fromAccountId(fromAccount.getId())
         .toAccountId(toAccount.getId())
         .amount(BigDecimal.valueOf(amount))
@@ -114,7 +114,7 @@ public abstract class BaseIntegrationTest {
     var response = post("transfers", transfer.toString());
 
     MatcherAssert.assertThat(response.statusCode(), is(200));
-    Transfer created = Transfer.fromJson(Json.read(response.body()));
+    TransferEntity created = TransferEntity.fromJson(Json.read(response.body()));
     return created;
   }
   // @AfterClass

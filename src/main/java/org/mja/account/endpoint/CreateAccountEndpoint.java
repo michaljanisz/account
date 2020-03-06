@@ -3,7 +3,7 @@ package org.mja.account.endpoint;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.mja.account.http.HttpMethod;
-import org.mja.account.model.Account;
+import org.mja.account.model.AccountEntity;
 import org.mja.account.repository.AccountRepository;
 
 public class CreateAccountEndpoint extends AbstractEndpoint {
@@ -29,8 +29,8 @@ public class CreateAccountEndpoint extends AbstractEndpoint {
 
   @Override
   protected EndpointResponse process(EndpointRequest request) {
-    Account account = Account.fromJson(request.getJson());
+    AccountEntity account = AccountEntity.fromJson(request.getJson());
     logger.info("creating an account " + account);
-    return EndpointResponse.fromJson(Account.toJson(accountRepository.create(account)));
+    return EndpointResponse.fromJson(AccountEntity.toJson(accountRepository.create(account)));
   }
 }

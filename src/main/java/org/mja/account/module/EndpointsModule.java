@@ -40,7 +40,6 @@ public class EndpointsModule {
     return new GetAccountEndpoint(accountRepository);
   }
 
-
   @Provides
   @Singleton
   AccountRepository provideAccountRepository() {

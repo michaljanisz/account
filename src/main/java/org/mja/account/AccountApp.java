@@ -6,8 +6,7 @@ import org.mja.account.module.ServerBuilder;
 
 public class AccountApp {
 
-
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] args) {
     ServerBuilder serverBuilder = DaggerServerBuilder.builder().build();
     serverBuilder.server().run();
   }

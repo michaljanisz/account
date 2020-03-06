@@ -132,6 +132,7 @@ public class TransferIntegrationTest extends BaseIntegrationTest {
     assertTransferResponse(transfer, 404,
         "account with id not_existing_id does not exist");
   }
+
   public void assertTransferResponse(TransferEntity transfer,
       int code,
       String message) {

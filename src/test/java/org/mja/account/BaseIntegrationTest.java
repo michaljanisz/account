@@ -105,7 +105,8 @@ public abstract class BaseIntegrationTest {
     return AccountEntity.fromJson(getJson);
   }
 
-  protected TransferEntity createTransfer(AccountEntity fromAccount, AccountEntity toAccount, int amount) {
+  protected TransferEntity createTransfer(AccountEntity fromAccount, AccountEntity toAccount,
+      int amount) {
     var transfer = TransferEntity.builder()
         .fromAccountId(fromAccount.getId())
         .toAccountId(toAccount.getId())

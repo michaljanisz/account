@@ -7,5 +7,6 @@ import org.mja.account.http.AccountHttpServer;
 @Singleton
 @Component(modules = {AccountHttpServerModule.class})
 public interface ServerBuilder {
+
   AccountHttpServer server();
 }

@@ -11,9 +11,11 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.UUID;
 import mjson.Json;
+import org.hamcrest.MatcherAssert;
 import org.junit.Before;
 import org.mja.account.http.AccountHttpServer;
 import org.mja.account.model.Account;
+import org.mja.account.model.Transfer;
 import org.mja.account.module.DaggerServerBuilder;
 import org.mja.account.module.ServerBuilder;
 
@@ -40,34 +42,39 @@ public abstract class BaseIntegrationTest {
     }
   }
 
-  protected HttpResponse<String> post(String path, String body)
-      throws IOException, InterruptedException {
+  protected HttpResponse<String> post(String path, String body) {
     HttpRequest request = HttpRequest.newBuilder()
         .POST(HttpRequest.BodyPublishers.ofString(body))
         .uri(URI.create("http://localhost:8080/" + path))
         .header("Content-Type", "application/json")
         .build();
 
-    return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    try {
+      return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  protected HttpResponse<String> get(String path, String... params)
-      throws IOException, InterruptedException {
+  protected HttpResponse<String> get(String path, String... params) {
     HttpRequest request = HttpRequest.newBuilder()
         .GET()
         .uri(URI.create(BASE_URL + String.format(path, (Object[]) params)))
         .header("Content-Type", "application/json")
         .build();
 
-    return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    try {
+      return httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+    } catch (IOException | InterruptedException e) {
+      throw new RuntimeException(e);
+    }
   }
 
-  protected Account createAccount(int balance) throws IOException, InterruptedException {
+  protected Account createAccount(int balance) {
     return createAccount(balance, "EUR");
   }
 
-  protected Account createAccount(int balance, String currency)
-      throws IOException, InterruptedException {
+  protected Account createAccount(int balance, String currency) {
     return createAccount(
         Account.builder()
             .number(UUID.randomUUID().toString())
@@ -75,15 +82,14 @@ public abstract class BaseIntegrationTest {
             .currency(currency).build());
   }
 
-  protected HttpResponse<String> createAccountReturnResponse(Account input)
-      throws IOException, InterruptedException {
+  protected HttpResponse<String> createAccountReturnResponse(Account input) {
     Json accountAsJson = Account.toJson(input);
     var response = post("accounts", accountAsJson.toString());
 
     return response;
   }
 
-  protected Account createAccount(Account input) throws IOException, InterruptedException {
+  protected Account createAccount(Account input) {
     HttpResponse<String> response = createAccountReturnResponse(input);
     assertThat(response.statusCode(), is(200));
 
@@ -92,11 +98,24 @@ public abstract class BaseIntegrationTest {
     return account;
   }
 
-  protected Account getAccount(String id) throws IOException, InterruptedException {
+  protected Account getAccount(String id) {
     var getResponse = get("accounts/%s", id);
     assertThat(getResponse.statusCode(), is(200));
     var getJson = Json.read(getResponse.body());
     return Account.fromJson(getJson);
+  }
+
+  protected Transfer createTransfer(Account fromAccount, Account toAccount, int amount) {
+    var transfer = Transfer.builder()
+        .fromAccountId(fromAccount.getId())
+        .toAccountId(toAccount.getId())
+        .amount(BigDecimal.valueOf(amount))
+        .build();
+    var response = post("transfers", transfer.toString());
+
+    MatcherAssert.assertThat(response.statusCode(), is(200));
+    Transfer created = Transfer.fromJson(Json.read(response.body()));
+    return created;
   }
   // @AfterClass
   //public void tearDown() throws Exception {

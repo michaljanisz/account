@@ -4,7 +4,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import org.junit.Test;
 import org.mja.account.BaseIntegrationTest;
@@ -13,7 +12,7 @@ import org.mja.account.model.Account;
 public class AccountIntegrationTest extends BaseIntegrationTest {
 
   @Test
-  public void createAndGetAnAccount() throws IOException, InterruptedException {
+  public void createAndGetAnAccount() {
     var account = Account.builder()
         .number("10")
         .currency("PLN")
@@ -37,7 +36,7 @@ public class AccountIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void createAnAccount() throws IOException, InterruptedException {
+  public void createAnAccount() {
     var account = Account.builder()
         .number("20")
         .currency("EUR")
@@ -52,10 +51,8 @@ public class AccountIntegrationTest extends BaseIntegrationTest {
     assertThat(created.getBalance(), is(BigDecimal.valueOf(2000)));
   }
 
-  // should not create an account for bad request
-
   @Test
-  public void shouldNotCreateAnAccount_whenNoCurrency() throws IOException, InterruptedException {
+  public void shouldNotCreateAnAccount_whenNoCurrency() {
     var account = Account.builder()
         .number("10")
         .balance(BigDecimal.valueOf(1000))
@@ -66,7 +63,7 @@ public class AccountIntegrationTest extends BaseIntegrationTest {
   }
 
   @Test
-  public void shouldNotCreateAnAccount_whenNoNumber() throws IOException, InterruptedException {
+  public void shouldNotCreateAnAccount_whenNoNumber() {
     var account = Account.builder()
         .currency("PLN")
         .balance(BigDecimal.valueOf(1000))

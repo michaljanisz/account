@@ -32,15 +32,15 @@ public class CreateTransferEndpoint extends AbstractEndpoint {
     Account toAccount = checkAccountExists(transfer.getToAccountId());
 
     // this part should be synchronized
-//    synchronized (this) {
-    Account fromAccount = checkAccountExists(transfer.getFromAccountId());
+    synchronized (this) {
+      Account fromAccount = checkAccountExists(transfer.getFromAccountId());
 
-    validateCurrencies(toAccount, fromAccount);
-    fromAccount.debitAmountIfPossible(transfer.getAmount());
-    toAccount.creditAmount(transfer.getAmount());
-    logger.info("creating a transfer " + transfer);
-    return EndpointResponse.fromJson(Transfer.toJson(transferRepository.create(transfer)));
-//    }
+      validateCurrencies(toAccount, fromAccount);
+      fromAccount.debitAmountIfPossible(transfer.getAmount());
+      toAccount.creditAmount(transfer.getAmount());
+      logger.info("creating a transfer " + transfer);
+      return EndpointResponse.fromJson(Transfer.toJson(transferRepository.create(transfer)));
+    }
   }
 
   private void validateCurrencies(Account toAccount, Account fromAccount) {

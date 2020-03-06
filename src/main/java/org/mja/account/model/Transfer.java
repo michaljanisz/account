@@ -53,7 +53,7 @@ public class Transfer extends BaseEntity {
       throw new UnprocessableEntityException("to account cannot be null");
     }
     if (amount == null) {
-      throw new UnprocessableEntityException("to amount cannot be null");
+      throw new UnprocessableEntityException("amount cannot be null");
     }
     if (amount.compareTo(BigDecimal.ZERO) <= 0) {
       throw new UnprocessableEntityException("amount must be greater then 0");
